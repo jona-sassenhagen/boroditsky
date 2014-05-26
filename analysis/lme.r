@@ -1,6 +1,4 @@
-library("lme4")
-
-setwd("~/Dropbox/manuscripts/boroditsky/analysis")
+library(lme4)
 
 # (männl: -1)
 
