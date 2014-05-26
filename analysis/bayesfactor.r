@@ -5,7 +5,7 @@ library("BayesFactor")
 # note: all values set to german gender,
 # so an interaction between sex * language indicates gram. gender congruence
 
-sourcefile<-paste("./preproc/boroditsky.csv",sep=",")
+sourcefile<-paste("../preproc/boroditsky.csv",sep=",")
 dat<-read.table(sourcefile,sep=",",header=TRUE)
 
 dat$subj <- as.factor(dat$subj)

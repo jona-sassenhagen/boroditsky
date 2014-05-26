@@ -12,7 +12,9 @@ genders_ger = ['m','f','f','f','m','f','m','m','f','m','m','f','f','m','f','m','
 
 genders_por = ['f','m','m','m','f','m','f','f','m','f','f','m','m','f','m','f','f','f','f','f','m','f','m','f']
 
-basedir = './raw'
+bindict = {-1:0, 1:1}
+
+basedir = '../raw'
 
 files = [os.path.join(basedir, f) for f in os.listdir(basedir)]
 
@@ -91,25 +93,27 @@ for associater in associaters:
         associater_results.append(val)
     all_associations.append(associater_results)
 
-out_all = ['subj,word,assoc_i,sex_port,sex_ger,sex,language,rating']
+por = all_associations                  # 50 associaters * 24 words * 1 rating sum each
+
+
+out_all = ['subj,word,assoc_i,rater_i,sex_port,sex_ger,sex,language,rating']
 
 for subj_i, associater in enumerate(associaters):
     associater_results = []                               # one per associater
     for word_i, words in enumerate(associater):
         for assoc_i, word in enumerate(words):      # of all associations for a word
-            val = 0                                       # becomes the sum of all ratings
-            for curr_rater in raters:
+            for rater_i,curr_rater in enumerate(raters):
                 try:
-                    val += curr_rater[word]
+                    val = bindict[curr_rater[word]]
+                    line = ','.join((str(subj_i+1), str(word_i+1), str(assoc_i+1),             
+                                     str(rater_i+1), 
+                                     genders_por[word_i], genders_ger[word_i],
+                                     genders_por[word_i], 'por', 
+                                     str(val)))
+                    out_all.append(line)
                 except KeyError as e:
                     missing.append(str(e))
-            line = ','.join((str(subj_i+1), str(word_i+1), str(assoc_i+1),
-                                 genders_por[word_i], genders_ger[word_i],
-                                 genders_por[word_i], 'por', str(val)))
-            out_all.append(line)
 
-
-por = all_associations                  # 50 associaters * 24 words * 1 rating sum each
 
 
 # deutsch
@@ -171,25 +175,27 @@ for associater in associaters:
         associater_results.append(val)
     all_associations.append(associater_results)
 
-# out_all = ['subj,word,assoc_i,sex_port,_sex_ger,sex,language,rating']
+ger = all_associations
+
+
+# out_all = ['subj,word,assoc_i,rater_i,sex_port,_sex_ger,sex,language,rating']
 
 for subj_i, associater in enumerate(associaters):
     associater_results = []                               # one per associater
     for word_i, words in enumerate(associater):
         for assoc_i, word in enumerate(words):      # of all associations for a word
-            val = 0                                       # becomes the sum of all ratings
-            for curr_rater in raters:
+            for rater_i,curr_rater in enumerate(raters):
                 try:
-                    val += curr_rater[word]
+                    val = bindict[curr_rater[word]]
+                    line = ','.join((str(subj_i+51), str(word_i+1), str(assoc_i+6),             
+                                     str(rater_i+1), 
+                                     genders_por[word_i], genders_ger[word_i],
+                                     genders_ger[word_i], 'ger', 
+                                     str(val)))
+                    out_all.append(line)
                 except KeyError as e:
                     missing.append(str(e))
-            line = ','.join((str(subj_i+51), str(word_i+1), str(assoc_i+1),
-                                 genders_por[word_i], genders_ger[word_i],
-                                 genders_ger[word_i], 'ger', str(val)))
-            out_all.append(line)
 
-
-ger = all_associations
 
 
 
@@ -210,7 +216,7 @@ for subject_i,words in enumerate(por):
         out.append(line)
 
 
-outdir = './preproc'
+outdir = '../preproc'
 
 outfile = outdir + '/boroditsky.csv'
 with open(outfile, 'w', newline='') as fp:
