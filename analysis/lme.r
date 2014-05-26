@@ -1,6 +1,6 @@
 library(lme4)
 
-# (männl: -1)
+# (männl: 0)
 
 # run model on all adjectives
 
@@ -21,7 +21,12 @@ dat$rater_i <- as.factor(dat$rater_i)
 
 
 
-modl1 <- lmer(rating ~ sex + language +  (1|assoc_i/word/language) + (1|rater_i) + (1|assoc_i/subj/language) , data = dat, family=binomial)
+modl1 <- glmer(rating ~ sex_ger:language + (1|rater_i) + (1|assoc_i/word/language) + (1|assoc_i/subj/language) , data = dat, family=binomial(link = 'logit'))
+
+
+modl1 <- glmer(rating ~ sex + language + (1|rater_i) + (1|assoc_i/word/language) +  (1|subj) , data = dat, family=binomial(link = 'logit'),verbose=TRUE)
+
+
 
 modl2 <- lmer(rating ~ language + (1|rater_i)  + (1|assoc_i/word/language) + (1|assoc_i/subj/language) , data = dat, family=binomial)
 
